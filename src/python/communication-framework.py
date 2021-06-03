@@ -4,7 +4,7 @@ import time
 
 class Comframe:
     
-    def __init__(self, port: int, hand: hand):
+    def __init__(self, port, hand: hand):
 
         self._hand = hand
 
@@ -38,7 +38,7 @@ class Comframe:
             pass
 
     # Method for extending support for optional handtracker on seperate serial Port
-    def attachHandTracker(self, port: int):
+    def attachHandTracker(self, port):
         pass
 
     
