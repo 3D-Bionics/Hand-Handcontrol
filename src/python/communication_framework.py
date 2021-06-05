@@ -1,5 +1,5 @@
-import pySerialTransfer as transfer
-import hand
+from pySerialTransfer import pySerialTransfer as transfer
+from hand_object import hand
 import time
 
 class Comframe:
@@ -52,10 +52,14 @@ class Comframe:
     def _receiveDebug(self):
         pass
 
-    # Send position to the arduino
-    def sendPos(self, positions: list[int]):
+    # Send specific position to the arduino
+    def sendPosList(self, positions: list[int]):
         if hand.checkPos(positions):
-            self._link.sentDatum(positions)
+            self._link.send(self._link.tx_obj(positions))
+
+    # Send position of hand to arduino
+    def sendPos(self):
+        self._link.send(self._link.tx_obj(self._hand.getPos()))
 
     # process all incoming packages
     def processAll(self):
