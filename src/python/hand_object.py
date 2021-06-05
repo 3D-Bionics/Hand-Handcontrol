@@ -84,3 +84,13 @@ class hand:
                 return False
         
         return True
+
+# A list of possible Hand Positions
+
+hand_positions = {
+    'Open': [0,0,0,0,0],
+    'Fist': [100,100,100,100,100],
+    'F You': [100,100,0,100,100],
+    'Metal': [0,100,100,0,100],
+    'Three Finger Salute': [100,0,0,0,100]
+}
