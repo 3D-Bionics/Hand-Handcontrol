@@ -10,6 +10,7 @@ class Comframe:
 
         self._queue = []
         self._queue_counter = 0
+        self.loop = False
 
         try:
             # Create Link
@@ -78,20 +79,15 @@ class Comframe:
     def processQueue(self):
         self.processOne()
         if self._queue_counter < len(self._queue):
-            queue_item = self._queue[self._queue_counter]
-            if queue_item == 'L':
-                self._queue_counter = 0
-            else:
-                self.sendPosList(queue_item)
-                self._queue_counter+=1
+            self.sendPosList(self._queue[self._queue_counter])
+            self._queue_counter+=1
 
-
-    def queue_position(self,position_array: list[list[int]],isLoop=False):
+        if self.loop and self._queue_counter == len(self._queue):
+            self._queue_counter=0
+            
+    def queue_position(self,position_array: list[list[int]]):
         for pos in position_array:
             self._queue.append(pos)
-        
-        if isLoop:
-            self._queue.append('L')
 
     def queue_clear(self):
         self._queue.clear()

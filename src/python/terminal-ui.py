@@ -2,7 +2,7 @@ import npyscreen
 import curses.ascii
 from hand_object import hand
 from communication_framework import Comframe 
-from ui_widgets import TSlider, BoxSelectOne
+from ui_widgets import TSlider, BoxSelectOne, BoxOptions
 
 
 class MainForm(npyscreen.FormBaseNew):
@@ -16,7 +16,8 @@ class MainForm(npyscreen.FormBaseNew):
         
         # Create UI
 
-        self.nextrely = round(y/2)-5
+        #self.nextrely = round(y/2)-5
+        self.nextrely = 3
         self.klein = self.add(TSlider, max_width=left,name = "Klein")
         self.nextrely +=1
         self.ring = self.add(TSlider, max_width=left, name = "Ring")
@@ -27,8 +28,10 @@ class MainForm(npyscreen.FormBaseNew):
         self.nextrely +=1
         self.daumen = self.add(TSlider, max_width=left, name = "Daumen")
 
-
-        self.quickPos = self.add(BoxSelectOne, relx = left + 10, rely=2, name = "Quick Positions")
+        self.nextrely = 2
+        self.quickPos = self.add(BoxSelectOne, relx = left + 10, max_height= round((y-2)/2), name = "Quick Positions")
+        self.nextrely += 2
+        self.button_loop = self.add(BoxOptions, relx= left +10)
 
         # init handlers
 
@@ -68,7 +71,7 @@ class MainForm(npyscreen.FormBaseNew):
      
 
     def updatePos(self):
-        self.klein.value = self.parentApp.Hand.getKlein()
+        self.klein.set_value(self.parentApp.Hand.getKlein())
         self.mittel.set_value(self.parentApp.Hand.getMittel())
         self.ring.set_value(self.parentApp.Hand.getRing())
         self.zeige.set_value(self.parentApp.Hand.getZeige())

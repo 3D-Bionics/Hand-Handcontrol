@@ -27,4 +27,25 @@ class SelectOne(npyscreen.SelectOne):
 class BoxSelectOne(npyscreen.BoxTitle):
     _contained_widget = SelectOne
 
+
+class Options(npyscreen.MultiSelect):
+
+    def __init__(self,screen,*args,**keywords):
+        super(Options,self).__init__(screen,values=['Loop'],*args,**keywords)
+
+    def when_value_edited(self):
+        options = self.get_selected_objects() or []
+        Comframe = self.find_parent_app().Comframe
+
+        if 'Loop' in options:
+            Comframe.loop = True
+        else:
+            Comframe.loop = False
+           
+                    
+
+class BoxOptions(npyscreen.BoxTitle):
+    _contained_widget = Options
+    name = 'Options'
+
     
