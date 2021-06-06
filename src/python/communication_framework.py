@@ -4,7 +4,7 @@ import time
 
 class Comframe:
     
-    def __init__(self, port, hand: hand):
+    def __init__(self, hand: hand, port = None):
 
         self._hand = hand
 
@@ -12,28 +12,37 @@ class Comframe:
         self._queue_counter = 0
         self.loop = False
 
-        try:
-            # Create Link
-            self._link = transfer.SerialTransfer(port)
+        if type(port) == list:
+            available_ports = port
+        elif type(port) == int:
+            available_ports = [port]
+        else:
+            available_ports = getOpenPorts()
 
-            # Set Callbacks for automatic receiving and processing of packages
-            self._callbacklist = [self._receivePos, self._receiveDebug]
-            self._link.set_callbacks(self._callbacklist)
-
-            # Open Link
-            self._link.open()
-
-
-        except KeyboardInterrupt:
+        while True:
             try:
-                self._link.close()
+                # Create Link
+                self._link = transfer.SerialTransfer(available_ports.pop())
+
+                # Set Callbacks for automatic receiving and processing of packages
+                self._callbacklist = [self._receivePos, self._receiveDebug]
+                self._link.set_callbacks(self._callbacklist)
+
+                # Open Link
+                if self._link.open():
+                    return
+
+            except KeyboardInterrupt:
+                try:
+                    self._link.close()
+                except:
+                    quit()
+
             except:
                 pass
-
-        except:
-            import traceback
-            traceback.print_exc()
-            quit()
+            
+        raise Exception("No Connection")
+        
     
     def __del__(self):
         try:
@@ -95,7 +104,6 @@ class Comframe:
         self._queue.clear()
         self._queue_counter = 0
 
-    # Gets all available Ports for serial communication
-    @staticmethod
-    def getOpenPorts() -> list:
-        return transfer.open_ports()
+# Gets all available Ports for serial communication
+def getOpenPorts() -> list:
+    return transfer.open_ports()

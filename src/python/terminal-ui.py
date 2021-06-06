@@ -1,17 +1,21 @@
 import npyscreen
 import curses.ascii
 from hand_object import hand
-from communication_framework import Comframe 
+from communication_framework import Comframe, getOpenPorts
 from ui_widgets import TSlider, BoxSelectOne, BoxOptions
 
 class MainForm(npyscreen.FormBaseNew):
-    def __init__(self,*args,**keywords):
-        super(MainForm,self).__init__(name="3D-Bionics Hand Controll Software",lines=22,*args,**keywords)
-
-        self.Hand = self.parentApp.Hand
-        self.Comframe = self.parentApp.Comframe
 
     def create(self):
+        # Init Form and Objects
+        self.name = "3D-Bionics Hand Controll Software"
+
+        self.Hand = hand()
+        self.parentApp.Hand = self.Hand
+        
+        self.Comframe = Comframe(self.Hand)
+        self.parentApp.Comframe = self.Comframe
+
         y, x = self.useable_space()
 
         left = round(x*2/3)
@@ -87,8 +91,6 @@ class MainForm(npyscreen.FormBaseNew):
 
 class hand_controll(npyscreen.NPSAppManaged):
     def onStart(self):
-        self.Hand = hand([0,0,0,0,0])
-        self.Comframe = Comframe('/dev/ttyUSB0',self.Hand)
         self.addForm("MAIN", MainForm)
 
     
