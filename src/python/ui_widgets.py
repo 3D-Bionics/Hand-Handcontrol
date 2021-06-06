@@ -49,4 +49,38 @@ class BoxOptions(npyscreen.BoxTitle):
     _contained_widget = Options
     name = 'Options'
 
-    
+from npyscreen import fmPopup, wgmultiline 
+from communication_framework import getOpenPorts
+
+class _PortBox(npyscreen.ComboBox):
+
+    def h_change_value(self, input):
+        self.values = getOpenPorts()
+        self.find_parent_app().Comframe.reconnect()
+        "Pop up a window in which to select the values for the field"
+        F = fmPopup.Popup(name = self.name)
+        l = F.add(wgmultiline.MultiLine, 
+            values = [self.display_value(x) for x in self.values],
+            return_exit=True, select_exit=True,
+            value=self.value)
+        F.display()
+        l.edit()
+        self.value = l.value
+
+    def when_value_edited(self):
+        Comframe = self.find_parent_app().Comframe        
+        try:
+            Comframe.reconnect(self.values[self.value])
+        except:
+            Comframe.reconnect()
+
+
+class PortBox(npyscreen.TitleCombo):
+    _entry_type=_PortBox
+
+    def __init__(self,screen,*args,**keywords):
+        super(PortBox,self).__init__(screen,name = "Serial Port:", use_two_lines=False, *args,**keywords)
+
+        currentPort = self.find_parent_app().Comframe.port
+        self.values.append(currentPort)
+        self.value = self.values.index(currentPort)

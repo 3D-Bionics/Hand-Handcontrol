@@ -12,6 +12,9 @@ class Comframe:
         self._queue_counter = 0
         self.loop = False
 
+        self._connect(port)
+
+    def _connect(self,port = None):
         if type(port) == list:
             available_ports = port
         elif type(port) == int:
@@ -48,6 +51,10 @@ class Comframe:
                 pass
             
         raise Exception("No Connection")
+
+    def reconnect(self,port = None):
+        self._link.close()
+        self._connect(port or self.port)
         
     
     def __del__(self):

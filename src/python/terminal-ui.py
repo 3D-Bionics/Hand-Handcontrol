@@ -2,9 +2,10 @@ import npyscreen
 import curses.ascii
 from hand_object import hand
 from communication_framework import Comframe, getOpenPorts
-from ui_widgets import TSlider, BoxSelectOne, BoxOptions
+from ui_widgets import TSlider, BoxSelectOne, BoxOptions, PortBox
 
 class MainForm(npyscreen.FormBaseNew):
+    DEFAULT_LINES = 22
 
     def create(self):
         # Init Form and Objects
@@ -21,8 +22,6 @@ class MainForm(npyscreen.FormBaseNew):
         left = round(x*2/3)
         
         # Create UI
-
-        #self.nextrely = round(y/2)-5
         self.nextrely = 3
         self.klein = self.add(TSlider, max_width=left,name = "Klein")
         self.nextrely +=1
@@ -33,6 +32,9 @@ class MainForm(npyscreen.FormBaseNew):
         self.zeige = self.add(TSlider, max_width=left, name = "Zeige")
         self.nextrely +=1
         self.daumen = self.add(TSlider, max_width=left, name = "Daumen")
+
+
+        self.ports = self.add(PortBox,rely=y-3,max_width=left)
 
         self.nextrely = 2
         self.quickPos = self.add(BoxSelectOne, relx = left + 10, max_height= round((y-2)/2), name = "Quick Positions")
