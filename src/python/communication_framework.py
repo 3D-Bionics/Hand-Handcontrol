@@ -8,6 +8,9 @@ class Comframe:
 
         self._hand = hand
 
+        self._queue = []
+        self._queue_counter = 0
+
         try:
             # Create Link
             self._link = transfer.SerialTransfer(port)
@@ -63,12 +66,36 @@ class Comframe:
 
     # process all incoming packages
     def processAll(self):
-        while(self._link.tick()):
+        while(self.processOne()):
             pass
-    
+
     # process one incoming package
     def processOne(self):
         self._link.tick()
+        
+    # process the incoming package + message queue
+
+    def processQueue(self):
+        self.processOne()
+        if self._queue_counter < len(self._queue):
+            queue_item = self._queue[self._queue_counter]
+            if queue_item == 'L':
+                self._queue_counter = 0
+            else:
+                self.sendPosList(queue_item)
+                self._queue_counter+=1
+
+
+    def queue_position(self,position_array: list[list[int]],isLoop=False):
+        for pos in position_array:
+            self._queue.append(pos)
+        
+        if isLoop:
+            self._queue.append('L')
+
+    def queue_clear(self):
+        self._queue.clear()
+        self._queue_counter = 0
 
     
     @staticmethod
