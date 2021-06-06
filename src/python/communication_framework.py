@@ -74,7 +74,7 @@ class Comframe:
     def processOne(self):
         self._link.tick()
         
-    # process the incoming package + message queue
+    # process the incoming package + position queue
 
     def processQueue(self):
         self.processOne()
@@ -85,15 +85,17 @@ class Comframe:
         if self.loop and self._queue_counter == len(self._queue):
             self._queue_counter=0
             
+    # queus a list of positions into the internal queue
     def queue_position(self,position_array: list[list[int]]):
         for pos in position_array:
             self._queue.append(pos)
 
+    # clears the internal queue
     def queue_clear(self):
         self._queue.clear()
         self._queue_counter = 0
 
-    
+    # Gets all available Ports for serial communication
     @staticmethod
     def getOpenPorts() -> list:
         return transfer.open_ports()
