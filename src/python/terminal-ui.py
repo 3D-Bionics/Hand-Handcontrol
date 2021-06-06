@@ -4,10 +4,12 @@ from hand_object import hand
 from communication_framework import Comframe 
 from ui_widgets import TSlider, BoxSelectOne, BoxOptions
 
-
 class MainForm(npyscreen.FormBaseNew):
     def __init__(self,*args,**keywords):
         super(MainForm,self).__init__(name="3D-Bionics Hand Controll Software",lines=22,*args,**keywords)
+
+        self.Hand = self.parentApp.Hand
+        self.Comframe = self.parentApp.Comframe
 
     def create(self):
         y, x = self.useable_space()
@@ -50,32 +52,32 @@ class MainForm(npyscreen.FormBaseNew):
         self.parentApp.setNextForm(None)
 
     def while_waiting(self):
-        self.parentApp.Comframe.processQueue()
+        self.Comframe.processQueue()
         self.updatePos()
 
 
     def sendPos(self):
         
-        new_pos = [
-            self.klein.value,
-            self.mittel.value,
-            self.ring.value,
-            self.zeige.value,
-            self.daumen.value
-            ]
+        new_pos = [[
+            int(self.klein.value),
+            int(self.ring.value),
+            int(self.mittel.value),
+            int(self.zeige.value),
+            int(self.daumen.value)
+            ]]
 
-        if hand.checkPos(new_pos):
-            self.parentApp.Comframe.sendPosList(new_pos)
+        self.Comframe.queue_clear()
+        self.Comframe.queue_position(new_pos)
         
 
      
 
     def updatePos(self):
-        self.klein.set_value(self.parentApp.Hand.getKlein())
-        self.mittel.set_value(self.parentApp.Hand.getMittel())
-        self.ring.set_value(self.parentApp.Hand.getRing())
-        self.zeige.set_value(self.parentApp.Hand.getZeige())
-        self.daumen.set_value(self.parentApp.Hand.getDaumen())
+        self.klein.set_value(self.Hand.getKlein())
+        self.mittel.set_value(self.Hand.getMittel())
+        self.ring.set_value(self.Hand.getRing())
+        self.zeige.set_value(self.Hand.getZeige())
+        self.daumen.set_value(self.Hand.getDaumen())
         self.display()
     
     # Various functions
