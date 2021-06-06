@@ -4,7 +4,7 @@ from hand_object import hand,hand_positions
 
 class Slider(npyscreen.SliderPercent):
     def __init__(self,screen,block_color='CAUTIONHL',*args,**keywords):
-        super(Slider,self).__init__(screen,out_of=100, step=2, block_color=block_color ,*args,**keywords)
+        super(Slider,self).__init__(screen,out_of=100, step=2, editable= False, block_color=block_color ,*args,**keywords)
 
     def when_value_edited(self):
         self.parent.sendPos()
@@ -19,8 +19,9 @@ class SelectOne(npyscreen.SelectOne):
 
     def when_value_edited(self):
         options = self.get_selected_objects()
+        self.find_parent_app().Comframe.queue_clear()
         for option in options:
-            self.parent.parentApp.Comframe.sendPosList(hand_positions.get(option))
+            self.find_parent_app().Comframe.queue_position(hand_positions.get(option))
 
 
 class BoxSelectOne(npyscreen.BoxTitle):

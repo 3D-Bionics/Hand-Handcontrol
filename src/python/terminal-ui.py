@@ -41,13 +41,13 @@ class MainForm(npyscreen.FormBaseNew):
 
         # Additional Config
 
-        self.keypress_timeout=10
+        self.keypress_timeout=1
 
     def afterEditing(self):
         self.parentApp.setNextForm(None)
 
     def while_waiting(self):
-        self.parentApp.Comframe.processOne()
+        self.parentApp.Comframe.processQueue()
         self.updatePos()
 
 
