@@ -19,10 +19,15 @@ class Comframe:
         else:
             available_ports = getOpenPorts()
 
+        if not available_ports:
+            raise Exception("No available Serial Ports")
+
         while True:
             try:
                 # Create Link
-                self._link = transfer.SerialTransfer(available_ports.pop())
+                port = available_ports.pop()
+
+                self._link = transfer.SerialTransfer(port)
 
                 # Set Callbacks for automatic receiving and processing of packages
                 self._callbacklist = [self._receivePos, self._receiveDebug]
@@ -30,6 +35,7 @@ class Comframe:
 
                 # Open Link
                 if self._link.open():
+                    self.port = port
                     return
 
             except KeyboardInterrupt:
