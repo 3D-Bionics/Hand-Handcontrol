@@ -1,6 +1,7 @@
 import npyscreen
 
 from hand_object import hand,hand_positions
+from random import randint
 
 # Sliders for displaying current position of hand
 class Slider(npyscreen.SliderPercent):
@@ -18,13 +19,16 @@ class TSlider(npyscreen.TitleText):
 # Positions are located in a dict hand_positions in hand_object
 class SelectOne(npyscreen.SelectOne):
     def __init__(self,screen,*args,**keywords):
-        super(SelectOne,self).__init__(screen,values=list(hand_positions.keys()),*args,**keywords)
+        super(SelectOne,self).__init__(screen,values=list(hand_positions.keys()),value=0,*args,**keywords)
 
     def when_value_edited(self):
         options = self.get_selected_objects()
         self.find_parent_app().Comframe.queue_clear()
         for option in options:
-            self.find_parent_app().Comframe.queue_position(hand_positions.get(option))
+            if option == 'Schere Stein Papier':
+                self.find_parent_app().Comframe.queue_position([hand_positions.get(option)[randint(0,2)]])
+            else:
+             self.find_parent_app().Comframe.queue_position(hand_positions.get(option))
 
 class BoxSelectOne(npyscreen.BoxTitle):
     _contained_widget = SelectOne
