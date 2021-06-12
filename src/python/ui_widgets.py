@@ -23,12 +23,12 @@ class SelectOne(npyscreen.SelectOne):
 
     def when_value_edited(self):
         options = self.get_selected_objects()
-        self.find_parent_app().Comframe.queue_clear()
+        self.find_parent_app().comframe.queue_clear()
         for option in options:
             if option == 'Schere Stein Papier':
-                self.find_parent_app().Comframe.queue_position([hand_positions.get(option)[randint(0,2)]])
+                self.find_parent_app().comframe.queue_position([hand_positions.get(option)[randint(0,2)]])
             else:
-             self.find_parent_app().Comframe.queue_position(hand_positions.get(option))
+             self.find_parent_app().comframe.queue_position(hand_positions.get(option))
 
 class BoxSelectOne(npyscreen.BoxTitle):
     _contained_widget = SelectOne
@@ -42,12 +42,12 @@ class Options(npyscreen.MultiSelect):
 
     def when_value_edited(self):
         options = self.get_selected_objects() or []
-        Comframe = self.find_parent_app().Comframe
+        comframe = self.find_parent_app().comframe
 
         if 'Loop' in options:
-            Comframe.loop = True
+            comframe.loop = True
         else:
-            Comframe.loop = False
+            comframe.loop = False
 
 class BoxOptions(npyscreen.BoxTitle):
     _contained_widget = Options
@@ -60,7 +60,7 @@ class _PortBox(npyscreen.ComboBox):
 
     def h_change_value(self, input):
         self.values = getOpenPorts()
-        self.find_parent_app().Comframe.reconnect()
+        self.find_parent_app().comframe.reconnect()
         "Pop up a window in which to select the values for the field"
         F = fmPopup.Popup(name = self.name)
         l = F.add(wgmultiline.MultiLine, 
@@ -72,11 +72,11 @@ class _PortBox(npyscreen.ComboBox):
         self.value = l.value
 
     def when_value_edited(self):
-        Comframe = self.find_parent_app().Comframe        
+        comframe = self.find_parent_app().comframe        
         try:
-            Comframe.reconnect(self.values[self.value])
+            comframe.reconnect(self.values[self.value])
         except:
-            Comframe.reconnect()
+            comframe.reconnect()
 
 
 class PortBox(npyscreen.TitleCombo):
@@ -85,6 +85,6 @@ class PortBox(npyscreen.TitleCombo):
     def __init__(self,screen,*args,**keywords):
         super(PortBox,self).__init__(screen,name = "Serial Port:", use_two_lines=False, *args,**keywords)
 
-        currentPort = self.find_parent_app().Comframe.port
+        currentPort = self.find_parent_app().comframe.port
         self.values.append(currentPort)
         self.value = self.values.index(currentPort)
