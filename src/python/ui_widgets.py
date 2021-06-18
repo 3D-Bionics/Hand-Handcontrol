@@ -1,7 +1,7 @@
 import npyscreen
 
 from hand_object import hand,hand_positions
-from random import randint
+
 
 # Sliders for displaying current position of hand
 class Slider(npyscreen.SliderPercent):
@@ -25,10 +25,7 @@ class SelectOne(npyscreen.SelectOne):
         options = self.get_selected_objects()
         self.find_parent_app().comframe.queue_clear()
         for option in options:
-            if option == 'Schere Stein Papier':
-                self.find_parent_app().comframe.queue_position([hand_positions.get(option)[randint(0,2)]])
-            else:
-             self.find_parent_app().comframe.queue_position(hand_positions.get(option))
+             self.find_parent_app().comframe.queue_position(hand_positions[option])
 
 class BoxSelectOne(npyscreen.BoxTitle):
     _contained_widget = SelectOne
