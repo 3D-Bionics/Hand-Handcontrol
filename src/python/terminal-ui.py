@@ -3,7 +3,7 @@ import curses.ascii
 from curses import endwin
 from hand_object import hand
 from communication_framework import Comframe, getOpenPorts
-from ui_widgets import TSlider, BoxSelectOne, BoxOptions, PortBox
+from ui_widgets import TSlider, TimeSlider, BoxSelectOne, BoxOptions, PortBox
 
 class MainForm(npyscreen.FormBaseNew):
     DEFAULT_LINES = 22
@@ -30,6 +30,9 @@ class MainForm(npyscreen.FormBaseNew):
         self.zeige = self.add(TSlider, max_width=left, name = "Zeige")
         self.nextrely +=1
         self.daumen = self.add(TSlider, max_width=left, name = "Daumen")
+
+        self.nextrely += 2
+        self.timeslider = self.add(TimeSlider, max_width=round(left/1.5), value=0.1, name = "Delay")
 
 
         self.ports = self.add(PortBox,rely=y-3,max_width=left)

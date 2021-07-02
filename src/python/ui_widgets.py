@@ -15,6 +15,25 @@ class Slider(npyscreen.SliderPercent):
 class TSlider(npyscreen.TitleText):
     _entry_type=Slider
 
+# Slider for ajusting delay between position changes
+class _TimeSlider(npyscreen.Slider):
+    def __init__(self,screen,block_color='VERYGOOD',*args,**keywords):
+        super(_TimeSlider,self).__init__(screen,lowest = 0.01, out_of=1, step=0.01, editable= True, block_color=block_color ,*args,**keywords)
+    
+    def when_value_edited(self):
+        self.value = round(self.value,2)
+        self.find_parent_app().comframe.delay = self.value
+
+    def translate_value(self):
+        stri = "%ss / %ss" %(self.value, self.out_of)
+        if isinstance(stri, bytes):
+            stri = stri.decode(self.encoding, 'replace')
+        l = (len(str(self.out_of)))*2+6
+        stri = stri.rjust(l)
+        return stri
+
+class TimeSlider(npyscreen.TitleText):
+    _entry_type=_TimeSlider
 
 # Widget for selecting pre-programmed hand positions
 # Positions are located in file positions.py
