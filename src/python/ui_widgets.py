@@ -41,11 +41,14 @@ class SelectOne(npyscreen.SelectOne):
     def __init__(self,screen,*args,**keywords):
         super(SelectOne,self).__init__(screen,values=list(hand_positions.keys()),value=0,*args,**keywords)
 
-    def when_value_edited(self):
+    def setPosition(self):
         options = self.get_selected_objects()
         self.find_parent_app().comframe.queue_clear()
         for option in options:
-             self.find_parent_app().comframe.queue_position(hand_positions[option])
+            self.find_parent_app().comframe.queue_position(hand_positions[option])
+
+    def when_value_edited(self):
+        self.setPosition()
 
 class BoxSelectOne(npyscreen.BoxTitle):
     _contained_widget = SelectOne
@@ -55,7 +58,7 @@ class BoxSelectOne(npyscreen.BoxTitle):
 class Options(npyscreen.MultiSelect):
 
     def __init__(self,screen,*args,**keywords):
-        super(Options,self).__init__(screen,values=['Loop','Pause','Manual'],*args,**keywords)
+        super(Options,self).__init__(screen,values=['Loop','Pause','Manual','Custom Delay'],*args,**keywords)
 
     def when_value_edited(self):
         options = self.get_selected_objects() or []
@@ -83,7 +86,11 @@ class Options(npyscreen.MultiSelect):
             self.parent.mittel.editable = False
             self.parent.zeige.editable = False
             self.parent.daumen.editable = False
-            
+
+        if 'Custom Delay' in options:
+            self.parent.timeslider.hidden = False
+        else:
+            self.parent.timeslider.hidden = True
 
 class BoxOptions(npyscreen.BoxTitle):
     _contained_widget = Options
