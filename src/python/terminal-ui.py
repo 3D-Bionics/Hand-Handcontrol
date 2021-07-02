@@ -10,7 +10,7 @@ class MainForm(npyscreen.FormBaseNew):
 
     def create(self):
         # Init Form and Objects
-        self.name = "3D-Bionics Hand Controll Software"
+        self.name = "3D-Bionics Hand Control Software"
 
         self.comframe = self.parentApp.comframe
         self.hand = self.parentApp.hand
