@@ -9,8 +9,9 @@ class Comframe:
         self._hand = hand
 
         self._queue = []
-        self._queue_counter = 0
+        self._queue_iter = iter(self._queue)
         self.loop = False
+        self.pause = False
 
         self._connect(port)
 
@@ -101,13 +102,22 @@ class Comframe:
 
     def processQueue(self):
         self.processOne()
-        if self._queue_counter < len(self._queue):
-            self.sendPosList(self._queue[self._queue_counter])
-            self._queue_counter+=1
 
-        if self.loop and self._queue_counter == len(self._queue):
-            self._queue_counter=0
-            
+        if(self.pause is True):
+            return
+
+        def nextpos():
+            nextpos = next(self._queue_iter)
+            self.sendPosList(nextpos)
+        
+        try:
+            nextpos()
+        except:
+            if(self.loop is True):
+                self._queue_iter = iter(self._queue)
+                nextpos()
+                
+                
     # queus a list of positions into the internal queue
     def queue_position(self,position_array: list[list[int]]):
         for pos in position_array:
@@ -116,7 +126,7 @@ class Comframe:
     # clears the internal queue
     def queue_clear(self):
         self._queue.clear()
-        self._queue_counter = 0
+        self._queue_iter = iter(self._queue)
 
 
 # Gets all available Ports for serial communication
