@@ -1,6 +1,7 @@
 import npyscreen
 
-from hand_object import hand,hand_positions
+from hand_object import hand
+from positions import hand_positions
 
 
 # Sliders for displaying current position of hand
@@ -16,7 +17,7 @@ class TSlider(npyscreen.TitleText):
 
 
 # Widget for selecting pre-programmed hand positions
-# Positions are located in a dict hand_positions in hand_object
+# Positions are located in file positions.py
 class SelectOne(npyscreen.SelectOne):
     def __init__(self,screen,*args,**keywords):
         super(SelectOne,self).__init__(screen,values=list(hand_positions.keys()),value=0,*args,**keywords)

@@ -1,5 +1,3 @@
-from random import randint
-
 # Object for storing hand positions
 
 class hand:
@@ -86,68 +84,3 @@ class hand:
                 return False
         
         return True
-
-# A Custom dict that if the value is a function automatically calls it
-class CallableDict(dict):
-     def __getitem__(self, key):
-        val = super().__getitem__(key)
-        if callable(val):
-            return val()
-        return val
-
-def schereSteinPapier() -> list:
-    ssp_animation=[
-        [100,100,0,0,100],
-        [100,100,0,0,100],
-        [100,100,0,0,100],
-        [100,100,100,100,100],
-        [100,100,100,100,100],
-        [100,100,100,100,100],
-        [0,0,0,0,0],
-        [0,0,0,0,0],
-        [0,0,0,0,0]
-    ]
-
-    ssp_options=[
-        [100,100,0,0,100],
-        [100,100,100,100,100],
-        [0,0,0,0,0]
-    ]
-
-    ssp_animation.append(ssp_options[randint(0,2)])
-
-    return ssp_animation
-
-# A list of possible Hand Positions
-hand_positions = CallableDict(
-    {
-    'Open': [[0,0,0,0,0]],
-    'Fist': [[100,100,100,100,100]],
-    'F You': [[100,100,0,100,100]],
-    'Metal': [[0,100,100,0,100]],
-    'Three Finger Salute': [[100,0,0,0,100]],
-    'Rainbow': [
-        [60, 50, 40, 30, 20],
-        [70, 60, 50, 40, 30],
-        [80, 70, 60, 50, 40],
-        [90, 80, 70, 60, 50],
-        [100, 90, 80, 70, 60],
-        [90, 100, 90, 80, 70],
-        [80, 90, 100, 90, 80],
-        [70, 80, 90, 100, 90],
-        [60, 70, 80, 90, 100],
-        [50, 60, 70, 80, 90],
-        [40, 50, 60, 70, 80],
-        [30, 40, 50, 60, 70],
-        [20, 30, 40, 50, 60],
-        [10, 20, 30, 40, 50],
-        [0, 10, 20, 30, 40],
-        [10, 0, 10, 20, 30],
-        [20, 10, 0, 10, 20],
-        [30, 20, 10, 0, 10],
-        [40, 30, 20, 10, 0],
-        [50, 40, 30, 20, 10]
-    ],
-    'Schere Stein Papier': schereSteinPapier
-}
-)
