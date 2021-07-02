@@ -56,7 +56,6 @@ class MainForm(npyscreen.FormBaseNew):
         self.parentApp.setNextForm(None)
 
     def while_waiting(self):
-        self.comframe.processQueue()
         self.updatePos()
 
 

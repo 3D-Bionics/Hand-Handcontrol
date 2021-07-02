@@ -1,6 +1,8 @@
 from pySerialTransfer import pySerialTransfer as transfer
 from hand_object import hand
 import time
+import threading
+from collections import deque
 
 class Comframe:
     
@@ -8,13 +10,26 @@ class Comframe:
 
         self._hand = hand
 
-        self._queue = []
+        self._queue = deque()
         self._queue_iter = iter(self._queue)
+
+        self.delay = 0.2
+
         self.loop = False
         self.pause = False
 
         self._connect(port)
 
+        # Start worker thread for queue processing
+        self._worker_thread = threading.Thread(target=self._worker, daemon=True)
+        self._worker_thread.start()
+
+    def __del__(self):
+        try:
+            self._link.close()
+        except:
+            pass
+        
     # Function for connecting to an arduino. Trys to detect possible ports manually
     def _connect(self,port = None):
         if type(port) == list:
@@ -58,12 +73,6 @@ class Comframe:
         self._link.close()
         self._connect(port or self.port)
         
-    
-    def __del__(self):
-        try:
-            self._link.close()
-        except:
-            pass
 
     # Method for extending support for optional handtracker on seperate serial Port
     def attachHandTracker(self, port):
@@ -89,39 +98,35 @@ class Comframe:
     def sendPos(self):
         self._link.send(self._link.tx_obj(self._hand.getPos()))
 
-    # process all incoming packages
-    def processAll(self):
-        while(self.processOne()):
-            pass
-
-    # process one incoming package
-    def processOne(self):
-        self._link.tick()
-        
-    # process the incoming package + position queue
-
-    def processQueue(self):
-        self.processOne()
-
-        if(self.pause is True):
-            return
-
+    # worker function. Processes incoming packages and internal queue for sending positions.        
+    def _worker(self):
         def nextpos():
-            nextpos = next(self._queue_iter)
-            self.sendPosList(nextpos)
-        
-        try:
-            nextpos()
-        except:
-            if(self.loop is True):
-                self._queue_iter = iter(self._queue)
+                nextpos = next(self._queue_iter)
+                self.sendPosList(nextpos)
+            
+        while True:
+
+            # Process next incoming package
+            self._link.tick()
+
+            if(self.pause is True):
+                continue
+            
+            try:
                 nextpos()
-                
-                
+
+            except:
+                if(self.loop is True):
+                    self._queue_iter = iter(self._queue)
+                    nextpos()
+
+            time.sleep(self.delay)
+    
     # queus a list of positions into the internal queue
     def queue_position(self,position_array: list[list[int]]):
         for pos in position_array:
             self._queue.append(pos)
+        self._queue_iter = iter(self._queue)
 
     # clears the internal queue
     def queue_clear(self):
