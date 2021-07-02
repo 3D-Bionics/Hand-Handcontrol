@@ -14,6 +14,7 @@ class Comframe:
 
         self._connect(port)
 
+    # Function for connecting to an arduino. Trys to detect possible ports manually
     def _connect(self,port = None):
         if type(port) == list:
             available_ports = port
@@ -29,7 +30,6 @@ class Comframe:
             try:
                 # Create Link
                 port = available_ports.pop()
-
                 self._link = transfer.SerialTransfer(port)
 
                 # Set Callbacks for automatic receiving and processing of packages
@@ -51,7 +51,8 @@ class Comframe:
                 pass
             
         raise Exception("No Connection")
-
+    
+    # Reconnects to an arduino at runtime either with old port or a new given port
     def reconnect(self,port = None):
         self._link.close()
         self._connect(port or self.port)
@@ -116,6 +117,7 @@ class Comframe:
     def queue_clear(self):
         self._queue.clear()
         self._queue_counter = 0
+
 
 # Gets all available Ports for serial communication
 def getOpenPorts() -> list:
