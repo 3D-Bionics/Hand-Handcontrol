@@ -10,6 +10,9 @@ class MainForm(npyscreen.FormBaseNew):
 
     def create(self):
         # Init Form and Objects
+        if(self.parentApp.demomode is True):
+            self.name = "3D-Bionics Hand Control Software DEMO"
+        else:
         self.name = "3D-Bionics Hand Control Software"
 
         self.comframe = self.parentApp.comframe
@@ -97,9 +100,10 @@ class MainForm(npyscreen.FormBaseNew):
 
 class hand_controll(npyscreen.NPSAppManaged):
 
-    def __init__(self, comframe: Comframe,hand: hand):
+    def __init__(self, comframe: Comframe,hand: hand,demomode = None):
         self.comframe = comframe
         self.hand = hand
+        self.demomode = demomode
         super(hand_controll,self).__init__()
 
     def onStart(self):
@@ -107,7 +111,17 @@ class hand_controll(npyscreen.NPSAppManaged):
 
     
 if __name__ == "__main__":
+    import argparse
+    from demo import Demo
+    import threading
 
+    # Define Parser for arguments frim commandline
+    def CLIParser():
+        parser = argparse.ArgumentParser(description="The 3D-Bionics Hand Controll software,")
+        parser.add_argument('-d','--demo', help="For demonstration purposes. Plays a sequenze of animations defindend in demo.py", action="store_true")
+        return parser.parse_args()
+    
+    args = CLIParser()
     hand_object = hand()
     try:
         comframe = Comframe(hand_object)
@@ -116,5 +130,10 @@ if __name__ == "__main__":
         print("Make sure the arduino is connected and that the application has access right to the serial-port")
         quit()
     
-    App = hand_controll(comframe,hand_object)
+    # Start thread with demo-script. See demo.py to see how it works
+    if args.demo:
+        threading.Thread(target=Demo,args=(comframe,), daemon=True).start()
+
+    # Start App
+    App = hand_controll(comframe,hand_object,args.demo)
     App.run()
