@@ -13,7 +13,7 @@ class MainForm(npyscreen.FormBaseNew):
         if(self.parentApp.demomode is True):
             self.name = "3D-Bionics Hand Control Software DEMO"
         else:
-        self.name = "3D-Bionics Hand Control Software"
+            self.name = "3D-Bionics Hand Control Software"
 
         self.comframe = self.parentApp.comframe
         self.hand = self.parentApp.hand
@@ -109,7 +109,7 @@ class hand_controll(npyscreen.NPSAppManaged):
     def onStart(self):
         self.addForm("MAIN", MainForm)
 
-    
+
 if __name__ == "__main__":
     import argparse
     from demo import Demo
@@ -118,15 +118,25 @@ if __name__ == "__main__":
     # Define Parser for arguments frim commandline
     def CLIParser():
         parser = argparse.ArgumentParser(description="The 3D-Bionics Hand Controll software,")
+        parser.add_argument('-v','--version', action='version',version='%(prog)s 1.0')
+        parser.add_argument('-p','--port', help="Specify the serial-port of the 3D-Bionics Hand" )
+        parser.add_argument('--getAvailablePorts', help="Displays a list of all available ports", action='version',version= "\n".join(getOpenPorts()))
         parser.add_argument('-d','--demo', help="For demonstration purposes. Plays a sequenze of animations defindend in demo.py", action="store_true")
         return parser.parse_args()
-    
+
     args = CLIParser()
+
+    # Intizialize Handobject and Communication-Framework
     hand_object = hand()
+
     try:
-        comframe = Comframe(hand_object)
+        comframe = Comframe(hand_object, args.port)
     except:
-        print("Connection Error: No valid serial port detected!")
+        if args.port:
+            print("Connection Error: Could not open connection in specified port")
+        else:
+            print("Connection Error: No valid serial port detected!")
+
         print("Make sure the arduino is connected and that the application has access right to the serial-port")
         quit()
     

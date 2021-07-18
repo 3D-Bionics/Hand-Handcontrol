@@ -34,7 +34,7 @@ class Comframe:
     def _connect(self,port = None):
         if type(port) == list:
             available_ports = port
-        elif type(port) == int:
+        elif type(port) == str:
             available_ports = [port]
         else:
             available_ports = getOpenPorts()
@@ -42,10 +42,9 @@ class Comframe:
         if not available_ports:
             raise Exception("No available Serial Ports")
 
-        while True:
+        for port in available_ports:
             try:
                 # Create Link
-                port = available_ports.pop()
                 self._link = transfer.SerialTransfer(port)
 
                 # Set Callbacks for automatic receiving and processing of packages
