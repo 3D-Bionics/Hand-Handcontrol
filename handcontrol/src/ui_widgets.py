@@ -1,7 +1,6 @@
 import npyscreen
 
-from hand_object import hand
-from positions import hand_positions
+from .communication_framework import hand, hand_positions
 
 
 # Sliders for displaying current position of hand
@@ -97,7 +96,7 @@ class BoxOptions(npyscreen.BoxTitle):
     name = 'Options'
 
 from npyscreen import fmPopup, wgmultiline 
-from communication_framework import getOpenPorts
+from .communication_framework import getOpenPorts
 
 class _PortBox(npyscreen.ComboBox):
 

@@ -1,5 +1,5 @@
 from pySerialTransfer import pySerialTransfer as transfer
-from hand_object import hand
+from .hand_object import hand
 import time
 import threading
 from collections import deque

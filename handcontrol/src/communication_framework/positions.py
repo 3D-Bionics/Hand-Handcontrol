@@ -1,4 +1,4 @@
-from CallableDict import CallableDict
+from .CallableDict import CallableDict
 
 # Animation Generators
 # ---------------

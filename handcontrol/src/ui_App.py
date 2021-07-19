@@ -1,9 +1,8 @@
 import npyscreen
 import curses.ascii
 from curses import endwin
-from hand_object import hand
-from communication_framework import Comframe, getOpenPorts
-from ui_widgets import TSlider, TimeSlider, BoxSelectOne, BoxOptions, PortBox
+from .communication_framework import hand, Comframe, getOpenPorts
+from .ui_widgets import TSlider, TimeSlider, BoxSelectOne, BoxOptions, PortBox
 
 class MainForm(npyscreen.FormBaseNew):
     DEFAULT_LINES = 26
@@ -109,41 +108,3 @@ class hand_controll(npyscreen.NPSAppManaged):
     def onStart(self):
         self.addForm("MAIN", MainForm)
 
-
-if __name__ == "__main__":
-    import argparse
-    from demo import Demo
-    import threading
-
-    # Define Parser for arguments frim commandline
-    def CLIParser():
-        parser = argparse.ArgumentParser(description="The 3D-Bionics Hand Controll software,")
-        parser.add_argument('-v','--version', action='version',version='%(prog)s 1.0')
-        parser.add_argument('-p','--port', help="Specify the serial-port of the 3D-Bionics Hand" )
-        parser.add_argument('--getAvailablePorts', help="Displays a list of all available ports", action='version',version= "\n".join(getOpenPorts()))
-        parser.add_argument('-d','--demo', help="For demonstration purposes. Plays a sequenze of animations defindend in demo.py", action="store_true")
-        return parser.parse_args()
-
-    args = CLIParser()
-
-    # Intizialize Handobject and Communication-Framework
-    hand_object = hand()
-
-    try:
-        comframe = Comframe(hand_object, args.port)
-    except:
-        if args.port:
-            print("Connection Error: Could not open connection in specified port")
-        else:
-            print("Connection Error: No valid serial port detected!")
-
-        print("Make sure the arduino is connected and that the application has access right to the serial-port")
-        quit()
-    
-    # Start thread with demo-script. See demo.py to see how it works
-    if args.demo:
-        threading.Thread(target=Demo,args=(comframe,), daemon=True).start()
-
-    # Start App
-    App = hand_controll(comframe,hand_object,args.demo)
-    App.run()

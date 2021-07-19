@@ -1,6 +1,4 @@
-from communication_framework import Comframe
-from hand_object import hand
-from positions import hand_positions
+from communication_framework import Comframe, hand, hand_positions
 import time
 
 def Demo(com: Comframe):
