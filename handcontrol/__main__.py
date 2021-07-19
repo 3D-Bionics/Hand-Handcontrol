@@ -5,7 +5,7 @@ from handcontrol.src.communication_framework import Comframe, hand, getOpenPorts
 # Define Parser for arguments frim commandline
 def CLIParser():
     parser = argparse.ArgumentParser(description="The 3D-Bionics Hand Controll software,")
-    parser.add_argument('-v','--version', action='version',version='%(prog)s 1.0')
+    parser.add_argument('-v','--version', action='version',version='3D-Bionics Hand-Control 1.0')
     parser.add_argument('-p','--port', help="Specify the serial-port of the 3D-Bionics Hand" )
     parser.add_argument('--getAvailablePorts', help="Displays a list of all available ports", action='version',version= "\n".join(getOpenPorts()))
     parser.add_argument('-d','--demo', help="For demonstration purposes. Plays a sequenze of animations defindend in demo.py", action="store_true")
