@@ -3,6 +3,7 @@ from .hand_object import hand
 import time
 import threading
 from collections import deque
+from typing import List
 
 class Comframe:
     
@@ -89,7 +90,7 @@ class Comframe:
         pass
 
     # Send specific position to the arduino
-    def sendPosList(self, positions: list[int]):
+    def sendPosList(self, positions: List[int]):
         if hand.checkPos(positions):
             self._link.send(self._link.tx_obj(positions))
 
@@ -122,7 +123,7 @@ class Comframe:
             time.sleep(self.delay)
     
     # queus a list of positions into the internal queue
-    def queue_position(self,position_array: list[list[int]]):
+    def queue_position(self,position_array: List[List[int]]):
         for pos in position_array:
             self._queue.append(pos)
         self._queue_iter = iter(self._queue)
@@ -134,5 +135,5 @@ class Comframe:
 
 
 # Gets all available Ports for serial communication
-def getOpenPorts() -> list:
+def getOpenPorts() -> List:
     return transfer.open_ports()
